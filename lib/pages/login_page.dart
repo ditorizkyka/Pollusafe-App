@@ -1,84 +1,211 @@
 import 'package:flutter/material.dart';
-import 'package:latlogin_page/components/My_textfield.dart';
+// import 'package:google_fonts/google_fonts.dart';
+import 'package:latlogin_page/components/constans.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool? _checked = false;
 
   final usernameController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                     const Text( "Welcome Back! you've been missed!",
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
+          backgroundColor: bgColor,
+          body: Center(
+            child: Stack(children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Welcome Back 👋",
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 30),
-
-                    MyTextField(
-                      controller: usernameController,
-                      hintText: "Username",
-                      obscureText: false,
+                    const SizedBox(
+                      height: 15,
                     ),
-
-                    const SizedBox(height: 15),
-
-                    MyTextField(
-                      controller: passwordController,
-                      hintText: "Password",
-                      obscureText: true,
+                    Text(
+                      "Pollusafe is an application which needs to notification tracker to AQI(Air Quality Index) for all user who use this application.",
+                      style: secondaryTextStyle.copyWith(fontSize: 12),
+                      textAlign: TextAlign.center,
                     ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Email",
+                          style: primaryTextStyle.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: white1),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  hintText: "youremail@gmail.com",
+                                  hintStyle: secondaryTextStyle.copyWith(
+                                      color: textColor1.withOpacity(0.6),
+                                      fontSize: 14),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 17),
+                                  border: InputBorder.none),
+                            )),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Password",
+                          style: primaryTextStyle.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: white1),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  suffixIcon:
+                                      const Icon(Icons.visibility_off_outlined),
+                                  hintText: "Type your password here",
+                                  hintStyle: secondaryTextStyle.copyWith(
+                                      color: textColor1.withOpacity(0.6),
+                                      fontSize: 14),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 17),
+                                  border: InputBorder.none),
+                            )),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                           const Text("haven't create account?",style: TextStyle(color: Colors.white),),
-                          TextButton(
-                            onPressed: (){},
-                            child:const Text("Sign Up", style: TextStyle(color: Colors.white),),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _checked,
+                                onChanged: (newBool) {
+                                  setState(() {
+                                    _checked = newBool;
+                                  });
+                                },
+                              ),
+                              const SizedBox(
+                                height: 14,
+                              ),
+                              Text(
+                                "Remember me",
+                                style: thirdTextStyle,
+                              )
+                            ],
                           ),
+                          TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Forgot Passoword?",
+                                style: primaryTextStyle.copyWith(fontSize: 12),
+                              ))
                         ],
                       ),
                     ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: SizedBox(
-                        width: 400,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:const Color.fromARGB(255, 42, 165, 100),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)
-                            )
-                          ),
-                          onPressed: () {}, 
-                          child: const Text("Log in",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            )
-                            
-                          ),                        
-                        ),
+                    const SizedBox(
+                      height: 10,
                     ),
-                
-              ],
-            ),
-          )
-         ),
-       ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: button,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            )),
+                        child: Text(
+                          "LOGIN",
+                          style: primaryTextStyle.copyWith(
+                              color: white1, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: button2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            )),
+                        child: Text(
+                          "SIGNUP",
+                          style: primaryTextStyle.copyWith(
+                              color: white1, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(40),
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "SKIP",
+                        style: primaryTextStyle.copyWith(fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Icon(Icons.arrow_forward_ios)
+                  ],
+                ),
+              )
+            ]),
+          )),
     );
   }
 }
