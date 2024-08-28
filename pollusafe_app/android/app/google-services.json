@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "139997572289",
+    "project_id": "pollusafe-app",
+    "storage_bucket": "pollusafe-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139997572289:android:ea0e8ff0aa74d11b17b840",
+        "android_client_info": {
+          "package_name": "com.ditorizkyka.pollusafe_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRY9xo00rtn4LkUgQ8fHUsLPvzhIU62cw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
