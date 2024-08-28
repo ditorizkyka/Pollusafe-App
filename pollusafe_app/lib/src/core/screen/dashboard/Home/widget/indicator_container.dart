@@ -40,7 +40,7 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
         // Membandingkan data baru dengan data sebelumnya
         if (_previousData != null &&
             data!.aqi != _previousData!.aqi &&
-            data.aqi >= ref.watch(aqiSettingsProvider)) {
+            int.parse(data.aqi) >= int.parse(ref.watch(aqiSettingsProvider))) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             LocalNotification.showSimpleNotification(
                 title: "You are in danger",
@@ -76,14 +76,6 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const GreetingsHome(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.refresh,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
                 ],
               ),
               Gap.h24,
@@ -133,7 +125,8 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(AqiIndicator.getStatus(data.aqi),
+                                Text(
+                                    AqiIndicator.getStatus(int.parse(data.aqi)),
                                     style: GoogleFonts.roboto(
                                       fontSize: 30,
                                       color: ColorApp.darkBlue,

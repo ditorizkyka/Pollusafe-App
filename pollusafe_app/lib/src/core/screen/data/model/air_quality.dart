@@ -26,14 +26,14 @@ class AirQuality {
 
   factory AirQuality.fromJson(Map<String, dynamic> json) {
     return AirQuality(
-      aqi: json['data']?['aqi'] ?? 0 as String,
-      temp: json['data']?['iaqi']?['t']?['v'] ?? 0 as String,
-      city: json['data']?['city']?['name'] ?? 'Unknown',
-      time: json['data']?['time']?['s'] ?? 'Unknown',
-      pm10: json['data']?['iaqi']?['pm10']?['v'] ?? 0 as String,
-      humudity: json['data']?['iaqi']?['h']?['v'] ?? 0 as String,
-      wind: json['data']?['iaqi']?['w']?['v'] ?? 0 as String,
-      pressure: json['data']?['iaqi']?['p']?['v'] ?? 0 as int,
+      aqi: json['data']?['aqi'].toString() ?? "0",
+      temp: json['data']?['iaqi']?['t']?['v'].toString() ?? "0",
+      city: json['data']?['city']?['name'].toString() ?? 'Unknown',
+      time: json['data']?['time']?['s'].toString() ?? 'Unknown',
+      pm10: json['data']?['iaqi']?['pm10']?['v'].toString() ?? "0",
+      humudity: json['data']?['iaqi']?['h']?['v'].toString() ?? "0",
+      wind: json['data']?['iaqi']?['w']?['v'].toString() ?? "0",
+      pressure: json['data']?['iaqi']?['p']?['v'].toString() ?? "0",
     );
   }
 }

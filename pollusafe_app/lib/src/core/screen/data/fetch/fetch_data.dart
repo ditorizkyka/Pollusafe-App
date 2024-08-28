@@ -1,12 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pollusafe_app/src/core/screen/data/model/air_quality.dart';
 import 'package:http/http.dart' as http;
-// import 'package:pollusafe_app/src/core/screen/data/model/aqi_rank.dart';
-
-// API KEY
-const apiKey = "15a6f6d5bcf8d0e0ce2885d4efaf64388d32d860";
 
 Future<AirQuality?> fetchData() async {
   try {
@@ -50,12 +47,10 @@ Future<AirQuality?> fetchData() async {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    // Position position = await Geolocator.getCurrentPosition();
-    String latTelkom = "-6.969282";
-    String longTelkom = "107.62816";
+    Position position = await Geolocator.getCurrentPosition();
 
     final url1 = Uri.parse(
-        'https://api.waqi.info/feed/geo:${latTelkom};${longTelkom}/?token=$apiKey');
+        '${dotenv.env['ENDPOINT_MAINDATA']}geo:${position.latitude};${position.longitude}/?token=${dotenv.env['APIKEY_WAQI']}');
     // final url2 = Uri.parse(
     //     'https://api.waqi.info/search/?token=$apiKey&keyword=indonesia');
 
@@ -68,6 +63,7 @@ Future<AirQuality?> fetchData() async {
     }
     return null;
   } catch (e) {
+    print(e);
     rethrow;
   }
 }

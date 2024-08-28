@@ -55,6 +55,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   geocoding: ^3.0.0
   flutter_typeahead: ^5.2.0
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +86,7 @@ flutter:
     - assets/logo/
     - assets/icon/
     - assets/images/
+    - .env
 
 flutter_icons: 
     android: true

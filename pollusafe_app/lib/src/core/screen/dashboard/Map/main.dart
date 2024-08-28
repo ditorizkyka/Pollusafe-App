@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
-import 'dart:typed_data';
-import 'package:http/http.dart' as http;
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_map.dart';
+import 'package:pollusafe_app/src/core/screen/data/fetch/search_cities.dart';
 import 'package:pollusafe_app/src/core/screen/data/permission/location_permission_handler.dart';
 import 'package:pollusafe_app/src/shared/geolocator_provider.dart';
 import 'package:pollusafe_app/src/widgets/button/button_app.dart';
@@ -34,7 +33,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   TileOverlay _createTileOverlay() {
     return TileOverlay(
       tileOverlayId: const TileOverlayId('aqiTileOverlay'),
-      tileProvider: AQITileProvider(),
+      tileProvider: FetchMap(),
     );
   }
 
@@ -123,6 +122,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                       Gap.w12,
                       IconButton(
                           onPressed: () {
+                            FocusScope.of(context).unfocus();
                             if (searchController.text == "") {
                               showDialog(
                                   context: context,
@@ -131,16 +131,18 @@ class _MapPageState extends ConsumerState<MapPage> {
                                       description:
                                           " Please enter a valid city name."));
                             } else {
-                              if (FetchMap.fetchGeo(searchController.text)!
+                              if (SearchCities.fetchGeo(searchController.text)!
                                           .lat !=
                                       0 &&
-                                  FetchMap.fetchGeo(searchController.text)!
+                                  SearchCities.fetchGeo(searchController.text)!
                                           .long !=
                                       0) {
                                 _updateCameraPosition(
-                                    FetchMap.fetchGeo(searchController.text)!
+                                    SearchCities.fetchGeo(
+                                            searchController.text)!
                                         .lat,
-                                    FetchMap.fetchGeo(searchController.text)!
+                                    SearchCities.fetchGeo(
+                                            searchController.text)!
                                         .long);
                               } else {
                                 showDialog(
@@ -182,30 +184,5 @@ class _MapPageState extends ConsumerState<MapPage> {
         ),
       ]),
     );
-  }
-}
-
-class AQITileProvider implements TileProvider {
-  @override
-  Future<Tile> getTile(int x, int y, int? zoom) async {
-    // URL dari tile dengan token yang sudah digantikan
-    final url =
-        'https://tiles.waqi.info/tiles/usepa-aqi/$zoom/$x/$y.png?token=15a6f6d5bcf8d0e0ce2885d4efaf64388d32d860';
-
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        // Mengembalikan Tile dari bytes gambar
-        return Tile(256, 256, response.bodyBytes);
-      } else {
-        // Mengembalikan Tile kosong jika tidak berhasil memuat
-        return Tile(256, 256, Uint8List(0));
-      }
-    } catch (e) {
-      print('Error loading tile: $e');
-      // Mengembalikan Tile kosong jika terjadi kesalahan
-      return Tile(256, 256, Uint8List(0));
-    }
   }
 }

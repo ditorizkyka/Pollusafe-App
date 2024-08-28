@@ -47,7 +47,7 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                     decoration: BoxDecoration(
                       border: Border.all(
                           color: AqiIndicator.getColor(
-                              ref.watch(aqiSettingsProvider)),
+                              int.parse(ref.watch(aqiSettingsProvider))),
                           width: 6),
                       color: ColorApp.green,
                       borderRadius: BorderRadius.circular(160),
@@ -175,7 +175,7 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                         onPressed: () {
                           if (aqiController.text.isNotEmpty) {
                             ref.read(aqiSettingsProvider.notifier).state =
-                                int.parse(aqiController.text);
+                                (aqiController.text);
                             showDialog(
                                 context: context,
                                 builder: (context) => const AlertDialogApp(
@@ -189,6 +189,7 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                                     title: "Error, Empty Field",
                                     description: "Please fill out the field"));
                           }
+                          FocusScope.of(context).unfocus();
                         },
                       )
                     ],
