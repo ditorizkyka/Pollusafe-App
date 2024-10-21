@@ -1,7 +1,3 @@
-Here’s a well-structured `README.md` file for your Pollusafe app:
-
----
-
 # Pollusafe App
 
 ## 📱 Description  
