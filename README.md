@@ -45,18 +45,13 @@ Here’s a well-structured `README.md` file for your Pollusafe app:
 
 ---
 
-## 📄 License  
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).  
-
----
-
 ## 🤝 Contributing  
 Contributions are welcome! Please fork the repository and submit a pull request for any improvements or features you'd like to add.
 
 ---
 
 ## 📧 Contact  
-For inquiries or support, feel free to contact **Andito Rizkyka Rianto** via email at: [your-email@example.com]  
+For inquiries or support, feel free to contact **Andito Rizkyka Rianto** via email at: ditorizkyka@gmail.com  
 
 ---
 
