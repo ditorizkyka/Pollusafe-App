@@ -23,24 +23,6 @@
 
 ---
 
-## 📦 Installation & Setup  
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/yourusername/pollusafe-app.git
-   cd pollusafe-app
-   ```
-2. Install dependencies:  
-   ```bash
-   flutter pub get
-   ```
-3. Set up **Firebase Authentication** by adding your `google-services.json` to the project.  
-4. Run the app:  
-   ```bash
-   flutter run
-   ```
-
----
-
 ## 🤝 Contributing  
 Contributions are welcome! Please fork the repository and submit a pull request for any improvements or features you'd like to add.
 
