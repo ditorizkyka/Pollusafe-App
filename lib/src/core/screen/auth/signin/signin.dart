@@ -33,8 +33,7 @@ class _SigninState extends State<Signin> {
     String res = await AuthServices()
         .signIn(email: emailController.text, password: passwordController.text);
     if (res == '200 OK') {
-      CircularProgressIndicator();
-      context.goNamed('dashboard');
+      const CircularProgressIndicator();
     } else {
       showDialog(
           context: context,
