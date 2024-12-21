@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/data/conditional/colorAqi.dart';
 import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
 import 'package:pollusafe_app/src/shared/data_aqi_provider.dart';
 import 'package:pollusafe_app/src/shared/uid_provider.dart';
-import 'package:pollusafe_app/src/widgets/notification/local_notification.dart';
 
 class IndicatorContainer extends ConsumerStatefulWidget {
   final String location;
@@ -46,6 +46,7 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
         // Membandingkan data baru dengan data sebelumnya
 
         // Menyimpan data baru sebagai data sebelumnya untuk perbandingan berikutnya
+        // int.parse(data!.aqi) >= ref.read(aqiSettingsProvider.notifier).state
         _previousData = data;
 
         return StreamBuilder(
@@ -53,24 +54,21 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
             builder: (context, snap) {
               if (snap.hasData) {
                 if (_previousData != null && int.parse(data!.aqi) == 0) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    LocalNotification.showSimpleNotification(
-                        title: "You are in danger",
-                        body: "Hei User, Keep your day with mask!",
-                        payload: "halo");
-                  });
+                  UserModel().getNotification();
                 }
               }
 
               return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 20,
+                ),
                 width: double.infinity,
-                height: 289,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30)),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -83,41 +81,20 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const GreetingsHome(),
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => const AlertDialogApp(
-                                      title: "About Pollusafe App Beta!",
-                                      description:
-                                          "Pollusafe is an Air Quality monitoring app, that provides information about the Air Quality Index in your area! The main purpose of this app is to give alert to other people in the city with their Air Quality index to avoid/decrease respiratory desease caused bad Air quality\n\n Created by @ditorizkyka_",
-                                    ));
-                          },
-                          icon: const Icon(
-                            Icons.info_outline,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AppbarCustomHome(),
                     Gap.h24,
                     Container(
                       width: double.infinity,
-                      height: 160,
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                         color: ColorApp.darkBlue,
                       ),
                       child: Column(
                         children: [
                           Container(
                             width: double.infinity,
-                            height: 120,
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20),
@@ -128,7 +105,9 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 15),
+                                horizontal: 25,
+                                vertical: 15,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -142,7 +121,7 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                                       Text(
                                         data!.city,
                                         style: GoogleFonts.roboto(
-                                          fontSize: 12,
+                                          fontSize: SizeApp.h12,
                                           color: ColorApp.darkBlue,
                                         ),
                                       ),
@@ -153,23 +132,31 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
                                           AqiIndicator.getStatus(
-                                              int.parse(data.aqi)),
+                                            int.parse(data.aqi),
+                                          ),
                                           style: GoogleFonts.roboto(
-                                            fontSize: 30,
+                                            fontSize: SizeApp.h28,
                                             color: ColorApp.darkBlue,
                                             fontWeight: FontWeight.bold,
-                                          )),
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                      ),
                                       Row(
                                         children: [
                                           AqiRes(
-                                              title: "AQI",
-                                              idx: data.aqi.toString()),
+                                            title: "AQI",
+                                            idx: data.aqi.toString(),
+                                          ),
                                           Gap.w12,
                                           AqiRes(
-                                              title: "Temp",
-                                              idx: data.temp.toString()),
+                                            title: "Temp",
+                                            idx: data.temp.toString(),
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -180,20 +167,21 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                           ),
                           Container(
                             alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 13),
                             width: double.infinity,
-                            height: 40,
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20)),
+                                bottomLeft: Radius.circular(20),
+                                bottomRight: Radius.circular(20),
+                              ),
                               color: ColorApp.darkBlue,
                             ),
                             child: Text(
                               "Last Updated : ${data.time}",
                               style: GoogleFonts.roboto(
                                 color: Colors.white,
-                                fontSize: 11,
+                                fontSize: SizeApp.h12,
                               ),
                             ),
                           ),
@@ -293,6 +281,38 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
   }
 }
 
+class AppbarCustomHome extends StatelessWidget {
+  const AppbarCustomHome({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const GreetingsHome(),
+        IconButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => const AlertDialogApp(
+                      title: "About Pollusafe App Beta!",
+                      description:
+                          "Pollusafe is an Air Quality monitoring app, that provides information about the Air Quality Index in your area! The main purpose of this app is to give alert to other people in the city with their Air Quality index to avoid/decrease respiratory desease caused bad Air quality\n\n Created by @ditorizkyka_",
+                    ));
+          },
+          icon: const Icon(
+            Icons.info_outline,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class GreetingsHome extends StatelessWidget {
   const GreetingsHome({
     super.key,
@@ -307,13 +327,15 @@ class GreetingsHome extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Welcome back!",
-                    style:
-                        GoogleFonts.roboto(fontSize: 16, color: Colors.white)),
+                Text(
+                  "Welcome back!",
+                  style: GoogleFonts.roboto(
+                      fontSize: SizeApp.h16, color: Colors.white),
+                ),
                 Gap.h4,
                 Text(snapshot.data!.name,
                     style: GoogleFonts.roboto(
-                        fontSize: 20,
+                        fontSize: SizeApp.h24,
                         color: Colors.white,
                         fontWeight: FontWeight.bold)),
               ],

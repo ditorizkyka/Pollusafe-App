@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/model/MapModel.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_map.dart';
 import 'package:pollusafe_app/src/core/screen/data/fetch/search_cities.dart';
@@ -128,6 +130,8 @@ class _MapPageState extends ConsumerState<MapPage> {
                                       description:
                                           " Please enter a valid city name."));
                             } else {
+                              MapModel map = MapModel();
+                              ;
                               if (SearchCities.fetchGeo(searchController.text)!
                                           .lat !=
                                       0 &&
@@ -135,12 +139,12 @@ class _MapPageState extends ConsumerState<MapPage> {
                                           .long !=
                                       0) {
                                 _updateCameraPosition(
-                                    SearchCities.fetchGeo(
-                                            searchController.text)!
-                                        .lat,
-                                    SearchCities.fetchGeo(
-                                            searchController.text)!
-                                        .long);
+                                    MapModel()
+                                        .setDatabySearch(searchController.text)
+                                        .latitude_city!,
+                                    MapModel()
+                                        .setDatabySearch(searchController.text)
+                                        .longitude_city!);
                               } else {
                                 showDialog(
                                     context: context,
@@ -157,7 +161,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                   Gap.h12,
                   ButtonApp(
                     onPressed: () {
-                      determinePosition().then((value) {
+                      UserModel().fetchCoordinate().then((value) {
                         final newLat = value.latitude;
                         final newLng = value.longitude;
 

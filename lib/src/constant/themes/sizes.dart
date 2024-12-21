@@ -56,44 +56,44 @@ class SizeApp {
 class Gap {
   /// [INFO]
   /// Gaps that related with width
-  static const w4 = SizedBox(width: 4);
-  static const w8 = SizedBox(width: 8);
-  static const w12 = SizedBox(width: 12);
-  static const w16 = SizedBox(width: 16);
-  static const w20 = SizedBox(width: 20);
-  static const w24 = SizedBox(width: 24);
-  static const w28 = SizedBox(width: 28);
-  static const w32 = SizedBox(width: 32);
-  static const w36 = SizedBox(width: 36);
-  static const w40 = SizedBox(width: 40);
-  static const w48 = SizedBox(width: 48);
-  static const w52 = SizedBox(width: 52);
-  static const w56 = SizedBox(width: 56);
-  static const w64 = SizedBox(width: 64);
-  static const w72 = SizedBox(width: 72);
-  static const w80 = SizedBox(width: 80);
+  static final w4 = SizedBox(width: SizeApp.w4);
+  static final w8 = SizedBox(width: SizeApp.w8);
+  static final w12 = SizedBox(width: SizeApp.w12);
+  static final w16 = SizedBox(width: SizeApp.w16);
+  static final w20 = SizedBox(width: SizeApp.w20);
+  static final w24 = SizedBox(width: SizeApp.w24);
+  static final w28 = SizedBox(width: SizeApp.w28);
+  static final w32 = SizedBox(width: SizeApp.w32);
+  static final w36 = SizedBox(width: SizeApp.w36);
+  static final w40 = SizedBox(width: SizeApp.w40);
+  static final w48 = SizedBox(width: SizeApp.w48);
+  static final w52 = SizedBox(width: SizeApp.w52);
+  static final w56 = SizedBox(width: SizeApp.w56);
+  static final w64 = SizedBox(width: SizeApp.w64);
+  static final w72 = SizedBox(width: SizeApp.w72);
+  static final w80 = SizedBox(width: SizeApp.w80);
 
   /// [INFO]
   /// Gaps that related with height
-  static const h4 = SizedBox(height: 4);
-  static const h8 = SizedBox(height: 8);
-  static const h12 = SizedBox(height: 12);
-  static const h16 = SizedBox(height: 16);
-  static const h20 = SizedBox(height: 20);
-  static const h24 = SizedBox(height: 24);
-  static const h28 = SizedBox(height: 28);
-  static const h32 = SizedBox(height: 32);
-  static const h36 = SizedBox(height: 36);
-  static const h40 = SizedBox(height: 40);
-  static const h48 = SizedBox(height: 48);
-  static const h52 = SizedBox(height: 52);
-  static const h56 = SizedBox(height: 56);
-  static const h64 = SizedBox(height: 64);
-  static const h72 = SizedBox(height: 72);
-  static const h80 = SizedBox(height: 80);
+  static final h4 = SizedBox(height: SizeApp.h4);
+  static final h8 = SizedBox(height: SizeApp.h8);
+  static final h12 = SizedBox(height: SizeApp.h12);
+  static final h16 = SizedBox(height: SizeApp.h16);
+  static final h20 = SizedBox(height: SizeApp.h20);
+  static final h24 = SizedBox(height: SizeApp.h24);
+  static final h28 = SizedBox(height: SizeApp.h28);
+  static final h32 = SizedBox(height: SizeApp.h32);
+  static final h36 = SizedBox(height: SizeApp.h36);
+  static final h40 = SizedBox(height: SizeApp.h40);
+  static final h48 = SizedBox(height: SizeApp.h48);
+  static final h52 = SizedBox(height: SizeApp.h52);
+  static final h56 = SizedBox(height: SizeApp.h56);
+  static final h64 = SizedBox(height: SizeApp.h64);
+  static final h72 = SizedBox(height: SizeApp.h72);
+  static final h80 = SizedBox(height: SizeApp.h80);
 
   /// [INFO]
   /// Gaps for custom width or height outside the 8 pixel rules
-  static customGapWidth(double value) => SizedBox(width: value);
-  static customGapHeight(double value) => SizedBox(height: value);
+  static customGapWidth(double value) => SizedBox(width: value.w);
+  static customGapHeight(double value) => SizedBox(height: value.h);
 }

@@ -27,32 +27,34 @@ class DetailedInformation extends StatelessWidget {
           children: [
             Gap.h4,
             Container(
-                padding: const EdgeInsets.all(8),
-                width: double.infinity,
-                height: 80,
-                decoration: BoxDecoration(
-                    color: ColorApp.darkBlue,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ReportPerIndicator(
-                        idx: humudity.toString(),
-                        title: "Humudity",
-                      ),
-                      ReportPerIndicator(
-                        idx: pm10.toString(),
-                        title: "PM10",
-                      ),
-                      ReportPerIndicator(
-                        idx: wind.toString(),
-                        title: "Wind",
-                      ),
-                      ReportPerIndicator(
-                        idx: "10",
-                        title: "Pressure",
-                      ),
-                    ]))
+              padding: const EdgeInsets.all(8),
+              width: double.infinity,
+              height: 80,
+              decoration: BoxDecoration(
+                  color: ColorApp.darkBlue,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ReportPerIndicator(
+                    idx: humudity.toString(),
+                    title: "Humudity",
+                  ),
+                  ReportPerIndicator(
+                    idx: pm10.toString(),
+                    title: "PM10",
+                  ),
+                  ReportPerIndicator(
+                    idx: wind.toString(),
+                    title: "Wind",
+                  ),
+                  ReportPerIndicator(
+                    idx: "10",
+                    title: "Pressure",
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

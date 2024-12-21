@@ -5,6 +5,7 @@ import 'package:pollusafe_app/services/auth_services.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signin/widgets/signin_field.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/widgets/button/button_app.dart';
@@ -26,12 +27,14 @@ class _SigninState extends State<Signin> {
   }
 
   void signInUser() async {
-    setState(() {
-      CircularProgressIndicator(); // Menampilkan loading sebelum sign-in
-    });
+    setState(
+      () {
+        const CircularProgressIndicator(); // Menampilkan loading sebelum sign-in
+      },
+    );
 
-    String res = await AuthServices()
-        .signIn(email: emailController.text, password: passwordController.text);
+    String res = await UserModel().authSignIn(
+        email: emailController.text, password: passwordController.text);
     if (res == '200 OK') {
       const CircularProgressIndicator();
     } else {

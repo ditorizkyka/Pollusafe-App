@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/data/conditional/colorAqi.dart';
 import 'package:pollusafe_app/src/shared/aqi_settings_provider.dart';
@@ -410,7 +411,9 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
                                     if (aqiController.text.isNotEmpty) {
-                                      changeAqi(int.parse(aqiController.text));
+                                      UserModel().editAqiLevel(
+                                          ref.read(uidUser),
+                                          int.parse(aqiController.text));
 
                                       showDialog(
                                           context: context,

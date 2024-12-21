@@ -107,10 +107,11 @@ class HeaderRankList extends StatelessWidget {
             ),
           ),
           TextButton(
-              onPressed: () {
-                context.goNamed("fullrank");
-              },
-              child: Row(children: [
+            onPressed: () {
+              context.goNamed("fullrank");
+            },
+            child: Row(
+              children: [
                 Text(
                   "See More",
                   style: GoogleFonts.roboto(
@@ -122,7 +123,9 @@ class HeaderRankList extends StatelessWidget {
                 Gap.w4,
                 const Icon(Icons.arrow_forward_ios,
                     size: 12, color: ColorApp.darkBlue),
-              ]))
+              ],
+            ),
+          ),
         ],
       ),
     );

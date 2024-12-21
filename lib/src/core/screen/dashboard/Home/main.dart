@@ -8,7 +8,7 @@ import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/home_aqi_ran
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/indicator_container.dart';
 import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_data.dart';
 import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_rank.dart';
-import 'package:pollusafe_app/src/core/screen/data/model/user_model.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
 import 'package:pollusafe_app/src/shared/uid_provider.dart';
 // import 'package:flutter/services.dart';
@@ -96,7 +96,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 } else {
                   return Container(
                     width: double.infinity,
-                    // margin: const EdgeInsets.symmetric(horizontal: 10),
                     color: Colors.white,
                     child: Column(
                       children: [

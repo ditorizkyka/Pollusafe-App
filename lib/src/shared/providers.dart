@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pollusafe_app/src/core/screen/data/model/user_model.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 
 final userDataProvider = Provider((ref) async {
   User? user = FirebaseAuth.instance.currentUser;

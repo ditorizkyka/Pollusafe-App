@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:pollusafe_app/src/core/screen/data/model/air_quality.dart';
+import 'package:pollusafe_app/src/core/model/AqiModel.dart';
 import 'package:http/http.dart' as http;
 
 Future<AirQuality?> fetchData() async {

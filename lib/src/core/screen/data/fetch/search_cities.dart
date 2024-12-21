@@ -1,8 +1,8 @@
 class SearchCities {
-  double long;
-  double lat;
+  double? long;
+  double? lat;
 
-  SearchCities({required this.long, required this.lat});
+  SearchCities({this.long, this.lat});
 
   static const cities = {
     "Jakarta": {
