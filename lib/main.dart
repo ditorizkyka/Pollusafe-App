@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pollusafe_app/src/routes/app_navigation.dart';
 import 'package:pollusafe_app/src/widgets/notification/local_notification.dart';
 
@@ -24,12 +25,14 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      // routeInformationParser: _router.routeInformationParser,
-      // routerDelegate: _router.routerDelegate,
-      // routeInformationProvider: _router.routeInformationProvider,
-      routerConfig: AppNavigation.router,
-      debugShowCheckedModeBanner: false,
+    return ScreenUtilInit(
+      designSize: Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) => MaterialApp.router(
+        routerConfig: AppNavigation.router,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

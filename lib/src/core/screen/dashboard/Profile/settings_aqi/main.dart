@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/controller/UserController.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/data/conditional/colorAqi.dart';
 import 'package:pollusafe_app/src/shared/aqi_settings_provider.dart';
@@ -22,13 +27,14 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
   TextEditingController aqiController = TextEditingController();
 
   @override
-  @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection('users');
+    final userControler = Get.put(UserController());
+
     changeAqi(int aqiController) {
-      users.doc(ref.read(uidUser)).update({
+      users.doc(userControler.userModel.value?.uid).update({
         'aqi': aqiController,
       });
     }
@@ -210,18 +216,32 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
                                     if (aqiController.text.isNotEmpty) {
-                                      changeAqi(int.parse(aqiController.text));
-                                      ref
-                                          .read(aqiSettingsProvider.notifier)
-                                          .state = int.parse(aqiController.text);
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              const AlertDialogApp(
-                                                  title:
-                                                      "Successfully Updated!😁",
-                                                  description:
-                                                      "Your index has been updated, we will notify you as soon as possible!"));
+                                      if (int.parse(aqiController.text) <=
+                                              500 &&
+                                          int.parse(aqiController.text) >= 0) {
+                                        UserModel().editAqiLevel(
+                                            ref.read(uidUser),
+                                            int.parse(aqiController.text));
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const AlertDialogApp(
+                                                    title:
+                                                        "Successfully Updated!😁",
+                                                    description:
+                                                        "Your index has been updated, we will notify you as soon as possible!"));
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const AlertDialogApp(
+                                                    unFocus: true,
+                                                    title:
+                                                        "Error, Invalid Index",
+                                                    description:
+                                                        "Please enter a valid index"));
+                                      }
                                     } else if (aqiController.text == "") {
                                       showDialog(
                                           context: context,
@@ -410,16 +430,32 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
                                     if (aqiController.text.isNotEmpty) {
-                                      changeAqi(int.parse(aqiController.text));
+                                      if (int.parse(aqiController.text) <=
+                                              500 &&
+                                          int.parse(aqiController.text) >= 0) {
+                                        UserModel().editAqiLevel(
+                                            ref.read(uidUser),
+                                            int.parse(aqiController.text));
 
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              const AlertDialogApp(
-                                                  title:
-                                                      "Successfully Updated!😁",
-                                                  description:
-                                                      "Your index has been updated, we will notify you as soon as possible!"));
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const AlertDialogApp(
+                                                    title:
+                                                        "Successfully Updated!😁",
+                                                    description:
+                                                        "Your index has been updated, we will notify you as soon as possible!"));
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const AlertDialogApp(
+                                                    unFocus: true,
+                                                    title:
+                                                        "Error, Invalid Index",
+                                                    description:
+                                                        "Please enter a valid index"));
+                                      }
                                     } else if (aqiController.text == "") {
                                       showDialog(
                                           context: context,

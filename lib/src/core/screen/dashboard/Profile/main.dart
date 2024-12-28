@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/controller/UserController.dart';
 import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
 import 'package:pollusafe_app/src/widgets/button/button_app.dart';
 
@@ -27,7 +28,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           "Account",
           style: GoogleFonts.roboto(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: SizeApp.h20,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -36,14 +37,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: FutureBuilder(
-              future: passData(),
+              future: UserController.passData(),
               builder: (context, snap) {
                 if (snap.hasData) {
                   return Center(
                     child: Column(children: [
                       Gap.h20,
-                      const CircleAvatar(
-                        radius: 60,
+                      CircleAvatar(
+                        radius: SizeApp.h64,
                         backgroundImage: NetworkImage(
                             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
                       ),
