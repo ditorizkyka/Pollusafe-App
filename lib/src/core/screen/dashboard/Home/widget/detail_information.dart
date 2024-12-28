@@ -27,18 +27,18 @@ class DetailedInformation extends StatelessWidget {
           children: [
             Gap.h4,
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(SizeApp.h12),
               width: double.infinity,
-              height: 80,
+              // height: 80,
               decoration: BoxDecoration(
                   color: ColorApp.darkBlue,
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(SizeApp.h12)),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ReportPerIndicator(
                     idx: humudity.toString(),
-                    title: "Humudity",
+                    title: "Humidity",
                   ),
                   ReportPerIndicator(
                     idx: pm10.toString(),
@@ -48,7 +48,7 @@ class DetailedInformation extends StatelessWidget {
                     idx: wind.toString(),
                     title: "Wind",
                   ),
-                  ReportPerIndicator(
+                  const ReportPerIndicator(
                     idx: "10",
                     title: "Pressure",
                   ),
@@ -74,8 +74,8 @@ class ReportPerIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 70,
-      height: 60,
+      width: SizeApp.customHeight(70),
+      height: SizeApp.h56,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(10)),
       child: Center(
@@ -95,7 +95,7 @@ class ReportPerIndicator extends StatelessWidget {
             child: Text(
               title,
               style: GoogleFonts.roboto(
-                fontSize: 10,
+                fontSize: SizeApp.h12,
                 color: ColorApp.darkBlue,
               ),
             ),

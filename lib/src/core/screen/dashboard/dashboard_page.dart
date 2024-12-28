@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/main.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Map/main.dart';
@@ -9,9 +10,6 @@ class DashboardPage extends StatefulWidget {
 
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
-
-  static const String name = 'Awesome Notifications - Example App';
-  static const Color mainColor = Colors.deepPurple;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();

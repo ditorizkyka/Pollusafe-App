@@ -30,12 +30,13 @@ class HomeAqiRank extends StatelessWidget {
                         return ListTile(
                           leading: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius:
+                                    BorderRadius.circular(SizeApp.h12),
                                 color: AqiIndicator.getColor(
                                     int.parse(snap.data[index]['aqi'])),
                               ),
-                              width: 55,
-                              height: 55,
+                              width: SizeApp.h56,
+                              height: SizeApp.h56,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 // mainAxisSize: MainAxisSize.min
@@ -46,7 +47,7 @@ class HomeAqiRank extends StatelessWidget {
                                     child: Text(
                                       " ${snap.data[index]['aqi']}",
                                       style: GoogleFonts.roboto(
-                                        fontSize: 16,
+                                        fontSize: SizeApp.h16,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -58,7 +59,7 @@ class HomeAqiRank extends StatelessWidget {
                                     child: Text(
                                       'AQI',
                                       style: GoogleFonts.roboto(
-                                        fontSize: 10,
+                                        fontSize: SizeApp.h12,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -68,12 +69,13 @@ class HomeAqiRank extends StatelessWidget {
                           title: Text(
                             "${snap.data[index]['station']['name']}",
                             style: GoogleFonts.roboto(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                                fontSize: SizeApp.customHeight(14),
+                                fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
                               "Last updated ${snap.data[index]['time']['stime']}",
                               style: GoogleFonts.roboto(
-                                fontSize: 11,
+                                fontSize: SizeApp.h12,
                                 color: ColorApp.darkGrey,
                               )),
                         );
@@ -101,7 +103,7 @@ class HeaderRankList extends StatelessWidget {
           Text(
             "Today, Highest AQI Rank",
             style: GoogleFonts.roboto(
-              fontSize: 14,
+              fontSize: SizeApp.customHeight(14),
               fontWeight: FontWeight.w700,
               color: ColorApp.darkGrey,
             ),
@@ -115,14 +117,14 @@ class HeaderRankList extends StatelessWidget {
                 Text(
                   "See More",
                   style: GoogleFonts.roboto(
-                    fontSize: 14,
+                    fontSize: SizeApp.customHeight(14),
                     fontWeight: FontWeight.w700,
                     color: ColorApp.darkBlue,
                   ),
                 ),
                 Gap.w4,
-                const Icon(Icons.arrow_forward_ios,
-                    size: 12, color: ColorApp.darkBlue),
+                Icon(Icons.arrow_forward_ios,
+                    size: SizeApp.customHeight(12), color: ColorApp.darkBlue),
               ],
             ),
           ),

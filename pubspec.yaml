@@ -57,10 +57,15 @@ dependencies:
   flutter_typeahead: ^5.2.0
   flutter_dotenv: ^5.1.0
   flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.13
+  get: ^4.6.6
+  
 
 dev_dependencies:
-  flutter_test:
+  flutter_driver:
     sdk: flutter
+  test : 
+  mockito: ^5.4.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -90,7 +95,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/icon/
-    
+    - assets/team/    
     - .env
 
 # flutter_icons: 

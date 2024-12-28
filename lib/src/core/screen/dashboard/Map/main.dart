@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:async';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/controller/UserController.dart';
 import 'package:pollusafe_app/src/core/model/MapModel.dart';
 import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
-import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_map.dart';
 import 'package:pollusafe_app/src/core/screen/data/fetch/search_cities.dart';
-import 'package:pollusafe_app/src/core/screen/data/permission/location_permission_handler.dart';
-import 'package:pollusafe_app/src/shared/geolocator_provider.dart';
 import 'package:pollusafe_app/src/widgets/button/button_app.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -23,17 +21,9 @@ class MapPage extends ConsumerStatefulWidget {
 
 class _MapPageState extends ConsumerState<MapPage> {
   TextEditingController searchController = TextEditingController();
-  double defaultLang = 107.62816;
-  double defaultLat = -6.969282;
   GoogleMapController? _mapController;
 
   // Membuat TileOverlay dengan TileProvider kustom
-  TileOverlay _createTileOverlay() {
-    return TileOverlay(
-      tileOverlayId: const TileOverlayId('aqiTileOverlay'),
-      tileProvider: FetchMap(),
-    );
-  }
 
   void _updateCameraPosition(double lat, double lng) {
     final newPosition = CameraPosition(
@@ -46,6 +36,8 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -65,125 +57,133 @@ class _MapPageState extends ConsumerState<MapPage> {
           "Maps",
           style: GoogleFonts.roboto(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: SizeApp.h20,
             fontWeight: FontWeight.w700,
           ),
         ),
       ),
-      body: Stack(children: [
-        GoogleMap(
-          // liteModeEnabled: true, // Mode lebih ringan
-          initialCameraPosition: CameraPosition(
-            target: LatLng(defaultLat, defaultLang),
-            zoom: 11.0,
+      body: Obx(
+        () => Stack(children: [
+          GoogleMap(
+            // liteModeEnabled: true, // Mode lebih ringan
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                  userController.userModel.value?.latitude ??
+                      userController.defaultLat.value,
+                  userController.userModel.value?.longitude ??
+                      userController.defaultLong.value),
+              zoom: 11.0,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              _mapController = controller;
+            },
+            tileOverlays: {
+              UserModel().displayMap(),
+            },
           ),
-          onMapCreated: (GoogleMapController controller) {
-            _mapController = controller;
-          },
-          tileOverlays: {_createTileOverlay()},
-        ),
-        SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: searchController,
-                          decoration: InputDecoration(
-                            hintText: "Find your area",
-                            hintStyle: const TextStyle(
-                                color: ColorApp.darkGrey, fontSize: 14),
-                            prefixIcon: const Icon(Icons.search,
-                                color: ColorApp.darkBlue),
-                            labelStyle: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.red,
+          SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeApp.h20,
+                  vertical: SizeApp.h16,
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            decoration: InputDecoration(
+                              hintText: "Find your area",
+                              hintStyle: TextStyle(
+                                  color: ColorApp.darkGrey,
+                                  fontSize: SizeApp.h16),
+                              prefixIcon: const Icon(Icons.search,
+                                  color: ColorApp.darkBlue),
+                              labelStyle: GoogleFonts.roboto(
+                                fontSize: SizeApp.h16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.red,
+                              ),
+                              filled: true,
+                              fillColor:
+                                  const Color.fromARGB(255, 238, 240, 244),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(SizeApp.h12),
+                                ),
+                              ),
                             ),
-                            filled: true,
-                            fillColor: const Color.fromARGB(255, 238, 240, 244),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
-                            ),
+                            onChanged: (String value) {
+                              setState(() {});
+                            },
                           ),
-                          onChanged: (String value) {
-                            setState(() {});
-                          },
                         ),
-                      ),
-                      Gap.w12,
-                      IconButton(
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            if (searchController.text == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => const AlertDialogApp(
-                                      title: "Cannot find empty city!",
-                                      description:
-                                          " Please enter a valid city name."));
-                            } else {
-                              MapModel map = MapModel();
-                              ;
-                              if (SearchCities.fetchGeo(searchController.text)!
-                                          .lat !=
-                                      0 &&
-                                  SearchCities.fetchGeo(searchController.text)!
-                                          .long !=
-                                      0) {
-                                _updateCameraPosition(
-                                    MapModel()
-                                        .setDatabySearch(searchController.text)
-                                        .latitude_city!,
-                                    MapModel()
-                                        .setDatabySearch(searchController.text)
-                                        .longitude_city!);
-                              } else {
+                        Gap.w12,
+                        IconButton(
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+                              if (searchController.text == "") {
                                 showDialog(
                                     context: context,
                                     builder: (context) => const AlertDialogApp(
-                                        title: "City Not Found!",
+                                        title: "Cannot find empty city!",
                                         description:
-                                            "Please enter a valid city name."));
+                                            " Please enter a valid city name."));
+                              } else {
+                                if (SearchCities.fetchGeo(
+                                                searchController.text)!
+                                            .lat !=
+                                        0 &&
+                                    SearchCities.fetchGeo(
+                                                searchController.text)!
+                                            .long !=
+                                        0) {
+                                  _updateCameraPosition(
+                                      MapModel()
+                                          .setDatabySearch(
+                                              searchController.text)
+                                          .latitude_city!,
+                                      MapModel()
+                                          .setDatabySearch(
+                                              searchController.text)
+                                          .longitude_city!);
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => const AlertDialogApp(
+                                          title: "City Not Found!",
+                                          description:
+                                              "Please enter a valid city name."));
+                                }
                               }
-                            }
-                          },
-                          icon: const Icon(Icons.send))
-                    ],
-                  ),
-                  Gap.h12,
-                  ButtonApp(
-                    onPressed: () {
-                      UserModel().fetchCoordinate().then((value) {
-                        final newLat = value.latitude;
-                        final newLng = value.longitude;
-
-                        // Update posisi geolocator provider
-                        ref.read(geolocatorLangProvider.notifier).state =
-                            newLng;
-                        ref.read(geolocatorLatProvider.notifier).state = newLat;
-
-                        // Pindahkan kamera ke posisi yang baru
-                        _updateCameraPosition(newLat, newLng);
-                      }).onError((error, stackTrace) {
-                        print("ERROR $error");
-                      });
-                    },
-                    text: "Current Location",
-                  ),
-                ],
+                            },
+                            icon: const Icon(Icons.send))
+                      ],
+                    ),
+                    Gap.h12,
+                    ButtonApp(
+                      onPressed: () {
+                        _updateCameraPosition(
+                          userController.userModel.value?.latitude ??
+                              userController.defaultLat.value,
+                          userController.userModel.value?.longitude ??
+                              userController.defaultLong.value,
+                        );
+                      },
+                      text: "Current Location",
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

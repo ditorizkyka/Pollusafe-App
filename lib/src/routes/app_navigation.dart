@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pollusafe_app/src/core/screen/auth/signin/signin.dart';
+import 'package:pollusafe_app/src/core/screen/auth/login/login.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/full_rank/main.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/main.dart';
@@ -30,7 +30,7 @@ class AppNavigation {
       GoRoute(
         path: '/signin',
         name: 'signin',
-        builder: (context, state) => const Signin(),
+        builder: (context, state) => const Login(),
       ),
       GoRoute(
         path: '/signup',

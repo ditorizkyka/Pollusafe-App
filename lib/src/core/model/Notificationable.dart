@@ -1,3 +1,3 @@
 abstract class Notificationable {
-  void getNotification();
+  void getNotification(String message);
 }

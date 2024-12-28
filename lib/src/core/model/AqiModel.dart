@@ -3,32 +3,32 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
-class AirQuality {
+class AirQualityIndex {
   dynamic aqi;
   dynamic temp;
 
-  String city;
-  String time;
+  String? city;
+  String? time;
 
   dynamic pm10;
   dynamic pressure;
   dynamic humudity;
   dynamic wind;
 
-  AirQuality({
-    required this.aqi,
-    required this.temp,
-    required this.city,
-    required this.time,
-    required this.pm10,
-    required this.wind,
-    required this.humudity,
-    required this.pressure,
+  AirQualityIndex({
+    this.aqi,
+    this.temp,
+    this.city,
+    this.time,
+    this.pm10,
+    this.wind,
+    this.humudity,
+    this.pressure,
     // this.rankList = const [],
   });
 
-  factory AirQuality.fromJson(Map<String, dynamic> json) {
-    return AirQuality(
+  factory AirQualityIndex.fromJson(Map<String, dynamic> json) {
+    return AirQualityIndex(
       aqi: json['data']?['aqi'].toString() ?? "0",
       temp: json['data']?['iaqi']?['t']?['v'].toString() ?? "0",
       city: json['data']?['city']?['name'].toString() ?? 'Unknown',
@@ -40,7 +40,7 @@ class AirQuality {
     );
   }
 
-  Future<AirQuality?> fetchData() async {
+  Future<AirQualityIndex?> fetchDataAqi() async {
     try {
       /// Determine the current position of the device.
       ///
@@ -82,23 +82,22 @@ class AirQuality {
 
       // When we reach here, permissions are granted and we can
       // continue accessing the position of the device.
-      // Position position = await Geolocator.getCurrentPosition();
+      Position position = await Geolocator.getCurrentPosition();
 
-      String lat = "-6.69744504";
-      String long = "106.8228375";
       // ${position.latitude}
 
       final url1 = Uri.parse(
-          '${dotenv.env['ENDPOINT_MAINDATA']}geo:${lat};${long}/?token=${dotenv.env['APIKEY_WAQI']}');
+          '${dotenv.env['ENDPOINT_MAINDATA']}geo:${position.latitude};${position.longitude}/?token=${dotenv.env['APIKEY_WAQI']}');
       // final url2 = Uri.parse(
       //     'https://api.waqi.info/search/?token=$apiKey&keyword=indonesia');
 
       var response = await http.get(url1);
 
       if (response.statusCode == 200) {
-        AirQuality airQuality = AirQuality.fromJson(jsonDecode(response.body));
+        AirQualityIndex airQualityIndex =
+            AirQualityIndex.fromJson(jsonDecode(response.body));
 
-        return airQuality;
+        return airQualityIndex;
       }
       return null;
     } catch (e) {

@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/controller/UserController.dart';
 import 'package:pollusafe_app/src/core/model/UserModel.dart';
-import 'package:pollusafe_app/src/core/screen/auth/signup/signup.dart';
 import 'package:pollusafe_app/src/core/screen/data/conditional/colorAqi.dart';
 import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
+
+import 'package:pollusafe_app/src/shared/aqi_settings_provider.dart';
 import 'package:pollusafe_app/src/shared/data_aqi_provider.dart';
 import 'package:pollusafe_app/src/shared/uid_provider.dart';
+import 'package:pollusafe_app/src/widgets/button/button_app.dart';
 
 class IndicatorContainer extends ConsumerStatefulWidget {
   final String location;
@@ -47,14 +50,16 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
 
         // Menyimpan data baru sebagai data sebelumnya untuk perbandingan berikutnya
         // int.parse(data!.aqi) >= ref.read(aqiSettingsProvider.notifier).state
-        _previousData = data;
+        dynamic previousData = data!.aqi;
 
         return StreamBuilder(
             stream: users.doc(ref.read(uidUser)).snapshots(),
             builder: (context, snap) {
               if (snap.hasData) {
-                if (_previousData != null && int.parse(data!.aqi) == 0) {
-                  UserModel().getNotification();
+                if (int.parse(data.aqi) >
+                    ref.read(aqiSettingsProvider.notifier).state) {
+                  UserModel().getNotification(
+                      AqiIndicator.getStatus(int.parse(data.aqi)));
                 }
               }
 
@@ -85,9 +90,9 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                     Gap.h24,
                     Container(
                       width: double.infinity,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(
-                          Radius.circular(20),
+                          Radius.circular(SizeApp.h20),
                         ),
                         color: ColorApp.darkBlue,
                       ),
@@ -95,18 +100,18 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                         children: [
                           Container(
                             width: double.infinity,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                  topRight: Radius.circular(20)),
+                                  topLeft: Radius.circular(SizeApp.h20),
+                                  bottomLeft: Radius.circular(SizeApp.h20),
+                                  bottomRight: Radius.circular(SizeApp.h20),
+                                  topRight: Radius.circular(SizeApp.h20)),
                               color: Colors.white,
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 25,
-                                vertical: 15,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: SizeApp.h20,
+                                vertical: SizeApp.h16,
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +124,7 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                                       ),
                                       Gap.w4,
                                       Text(
-                                        data!.city,
+                                        data.city!,
                                         style: GoogleFonts.roboto(
                                           fontSize: SizeApp.h12,
                                           color: ColorApp.darkBlue,
@@ -127,7 +132,7 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
                                       ),
                                     ],
                                   ),
-                                  Gap.h8,
+                                  Gap.h16,
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -230,7 +235,7 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
             Gap.h24,
             Container(
               width: double.infinity,
-              height: 160,
+              height: SizeApp.customHeight(160),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 color: ColorApp.darkBlue,
@@ -295,18 +300,163 @@ class AppbarCustomHome extends StatelessWidget {
         IconButton(
           onPressed: () {
             showDialog(
-                context: context,
-                builder: (context) => const AlertDialogApp(
-                      title: "About Pollusafe App Beta!",
-                      description:
-                          "Pollusafe is an Air Quality monitoring app, that provides information about the Air Quality Index in your area! The main purpose of this app is to give alert to other people in the city with their Air Quality index to avoid/decrease respiratory desease caused bad Air quality\n\n Created by @ditorizkyka_",
-                    ));
+              context: context,
+              builder: (context) => AlertDialog(
+                backgroundColor: Colors.white,
+                title: Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: Text(
+                    "About Pollusafe App",
+                    style: GoogleFonts.roboto(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: ColorApp.darkBlue,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                content: Container(
+                  color: Colors.white,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              color: ColorApp.green,
+                              width: SizeApp.h64,
+                              padding: const EdgeInsets.all(10),
+                              child: Image.asset("assets/logo/pollusafe.png"),
+                            ),
+                            Container(
+                              width: SizeApp.h80,
+                              padding: const EdgeInsets.all(10),
+                              child: Image.asset("assets/logo/telkomLogo.png"),
+                            ),
+                          ],
+                        ),
+                        Gap.h16,
+                        Text(
+                          "Pollusafe is an Air Quality monitoring app, that provides information about the Air Quality Index in your area! The main purpose of this app is to give alert to other people in the city with their Air Quality index to avoid/decrease respiratory desease caused bad Air quality",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.roboto(
+                            fontSize: SizeApp.h12,
+                            fontWeight: FontWeight.w400,
+                            color: ColorApp.darkBlue,
+                          ),
+                        ),
+                        Gap.h16,
+                        Text(
+                          "Developed By :",
+                          style: GoogleFonts.roboto(
+                            fontSize: SizeApp.h16,
+                            fontWeight: FontWeight.w500,
+                            color: ColorApp.darkBlue,
+                          ),
+                        ),
+                        Gap.h20,
+                        Column(
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ShortProfile(
+                                  imageAsset: 'assets/team/dito.JPG',
+                                  instagramAcc: "@ditorizkyka_",
+                                ),
+                                ShortProfile(
+                                  imageAsset: 'assets/team/fariz.jpg',
+                                  instagramAcc: "@farizrjanuar",
+                                ),
+                              ],
+                            ),
+                            Gap.h24,
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ShortProfile(
+                                  imageAsset: 'assets/team/hilal.jpg',
+                                  instagramAcc: "@abeeyyn",
+                                ),
+                                ShortProfile(
+                                  imageAsset: 'assets/team/imam.jpg',
+                                  instagramAcc: "@_imamwijaya",
+                                ),
+                                ShortProfile(
+                                  imageAsset: 'assets/team/hazna.jpg',
+                                  instagramAcc: "@haznahhs",
+                                ),
+                              ],
+                            ),
+                            // Gap.h24,
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: [
+                  ButtonApp(
+                      onPressed: () {
+                        if (true == true) {
+                          FocusScope.of(context).unfocus();
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      text: "Close"),
+                ],
+              ),
+            );
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.info_outline,
             color: Colors.white,
-            size: 30,
+            size: SizeApp.h28,
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class ShortProfile extends StatelessWidget {
+  final String imageAsset;
+  final String instagramAcc;
+  const ShortProfile({
+    this.imageAsset = "",
+    this.instagramAcc = "",
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ClipOval(
+          child: Container(
+            color:
+                Colors.grey[200], // Optional: background color for the circle
+            width: SizeApp.h64, // Diameter of the circle
+            height: SizeApp.h64, // Diameter of the circle
+            child: Image.asset(
+              imageAsset,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Gap.h16, // Spacing between image and text
+        Text(
+          instagramAcc,
+          style: GoogleFonts.roboto(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: ColorApp.darkBlue),
         ),
       ],
     );
@@ -318,10 +468,9 @@ class GreetingsHome extends StatelessWidget {
     super.key,
   });
 
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: passData(),
+        future: UserController.passData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -333,11 +482,14 @@ class GreetingsHome extends StatelessWidget {
                       fontSize: SizeApp.h16, color: Colors.white),
                 ),
                 Gap.h4,
-                Text(snapshot.data!.name,
-                    style: GoogleFonts.roboto(
-                        fontSize: SizeApp.h24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
+                Text(
+                  snapshot.data!.name,
+                  style: GoogleFonts.roboto(
+                    fontSize: SizeApp.h24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             );
           } else {
@@ -360,12 +512,12 @@ class AqiRes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 55,
-      height: 55,
-      decoration: const BoxDecoration(
+      width: SizeApp.w52,
+      height: SizeApp.w52,
+      decoration: BoxDecoration(
         color: ColorApp.green,
         borderRadius: BorderRadius.all(
-          Radius.circular(10),
+          Radius.circular(SizeApp.h12),
         ),
       ),
       child: Center(
@@ -375,7 +527,7 @@ class AqiRes extends StatelessWidget {
           Text(
             idx,
             style: GoogleFonts.roboto(
-              fontSize: 20,
+              fontSize: SizeApp.h20,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
@@ -385,7 +537,7 @@ class AqiRes extends StatelessWidget {
             child: Text(
               title,
               style: GoogleFonts.roboto(
-                fontSize: 10,
+                fontSize: SizeApp.h12,
                 color: Colors.white,
               ),
             ),

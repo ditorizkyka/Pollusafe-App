@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AqiRank {
-  String location;
-  String timeUpdated;
+  String? location;
+  String? timeUpdated;
 
-  AqiRank({required this.location, required this.timeUpdated});
+  AqiRank({this.location, this.timeUpdated});
   Future<List> fetchDataAqiRank() async {
     List rankList = [];
     var response = await http.get(Uri.parse(

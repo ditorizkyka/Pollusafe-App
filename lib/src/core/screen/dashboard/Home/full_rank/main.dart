@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
+import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/model/AqiRankModel.dart';
 import 'package:pollusafe_app/src/core/screen/data/conditional/colorAqi.dart';
-import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_rank.dart';
 
 class FullRank extends ConsumerStatefulWidget {
   const FullRank({super.key});
@@ -26,12 +27,14 @@ class _FullRankState extends ConsumerState<FullRank> {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 35),
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeApp.h16,
+            vertical: SizeApp.h16,
+          ),
           child: FutureBuilder(
-            future: fetchRankData(),
+            future: AqiRank().fetchDataAqiRank(),
             builder: (context, snapshots) {
               if (snapshots.hasData) {
-                print(snapshots.data);
                 return ListView.builder(
                   itemCount: 10,
                   itemBuilder: (context, index) {
@@ -41,7 +44,7 @@ class _FullRankState extends ConsumerState<FullRank> {
                         style: GoogleFonts.roboto(
                           color: ColorApp.darkBlue,
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: SizeApp.customHeight(14),
                         ),
                       ),
                       subtitle: Text(
@@ -53,11 +56,13 @@ class _FullRankState extends ConsumerState<FullRank> {
                         ),
                       ),
                       leading: Container(
-                        width: 40,
-                        height: 40,
+                        width: SizeApp.customWidth(40),
+                        height: SizeApp.customWidth(40),
                         decoration: BoxDecoration(
                           color: ColorApp.green,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(
+                            SizeApp.customWidth(80),
+                          ),
                         ),
                         child: Center(
                           child: Text(
@@ -65,19 +70,22 @@ class _FullRankState extends ConsumerState<FullRank> {
                             style: GoogleFonts.roboto(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                              fontSize: SizeApp.customWidth(16),
                             ),
                           ),
                         ),
                       ),
                       trailing: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(
+                              SizeApp.customWidth(10),
+                            ),
                             color: AqiIndicator.getColor(
-                                int.parse(snapshots.data![index]['aqi'])),
+                              int.parse(snapshots.data![index]['aqi']),
+                            ),
                           ),
-                          width: 40,
-                          height: 40,
+                          width: SizeApp.h56,
+                          height: SizeApp.h56,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             // mainAxisSize: MainAxisSize.min
@@ -88,7 +96,7 @@ class _FullRankState extends ConsumerState<FullRank> {
                                 child: Text(
                                   " ${snapshots.data![index]['aqi']}",
                                   style: GoogleFonts.roboto(
-                                    fontSize: 14,
+                                    fontSize: SizeApp.h16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),

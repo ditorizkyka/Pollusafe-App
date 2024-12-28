@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pollusafe_app/src/core/controller/UserController.dart';
 import 'package:pollusafe_app/src/core/model/Loginable.dart';
+import 'package:pollusafe_app/src/core/model/MapModel.dart';
+import 'package:pollusafe_app/src/core/model/Notificationable.dart';
 import 'package:pollusafe_app/src/core/model/Signupable.dart';
 import 'package:pollusafe_app/src/widgets/notification/local_notification.dart';
 import 'package:geolocator/geolocator.dart';
 
 final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
-class UserModel implements Loginable, Signupable {
+class UserModel implements Loginable, Signupable, Notificationable {
   String name;
   String email;
   String uid;
-  int aqi;
+  int defaultAqi;
   double longitude;
   double latitude;
 
@@ -22,7 +27,7 @@ class UserModel implements Loginable, Signupable {
     this.name = "user",
     this.email = "null",
     this.uid = "xxx",
-    this.aqi = 100,
+    this.defaultAqi = 100,
   });
 
   @override
@@ -33,8 +38,7 @@ class UserModel implements Loginable, Signupable {
     String res = "Some error occured";
     final FirebaseAuth auth = FirebaseAuth.instance;
     try {
-      if (email.isNotEmpty || password.isNotEmpty) {
-        // login user with email and password
+      if (email.isNotEmpty && password.isNotEmpty) {
         await auth.signInWithEmailAndPassword(email: email, password: password);
         res = "200 OK";
       } else {
@@ -56,7 +60,8 @@ class UserModel implements Loginable, Signupable {
     final FirebaseAuth auth = FirebaseAuth.instance;
     try {
       // for register with email and password
-      if (email.isNotEmpty || password.isNotEmpty || name.isNotEmpty) {
+      if (email.isNotEmpty && password.isNotEmpty && name.isNotEmpty) {
+        final userController = Get.put(UserController());
         UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
@@ -71,6 +76,7 @@ class UserModel implements Loginable, Signupable {
         });
 
         res = "200 OK";
+        userController.userData();
       } else {
         res = "Please fill all the fields";
       }
@@ -80,12 +86,12 @@ class UserModel implements Loginable, Signupable {
     return res;
   }
 
-  void getNotification() {
+  void getNotification(String message) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         LocalNotification.showSimpleNotification(
-            title: "You are in danger",
-            body: "Hei User, Keep your day with mask!",
+            title: "Hei Buddy! You are in ${message} level",
+            body: "Keep your day with mask or stay at home😁👋",
             payload: "halo");
       },
     );
@@ -99,7 +105,12 @@ class UserModel implements Loginable, Signupable {
     });
   }
 
-  void displayMap() {}
+  TileOverlay displayMap() {
+    return TileOverlay(
+      tileOverlayId: const TileOverlayId('aqiTileOverlay'),
+      tileProvider: MapModel(),
+    );
+  }
 
   bool positionStreamStarted = false;
   Future<Position> fetchCoordinate() async {
@@ -110,9 +121,6 @@ class UserModel implements Loginable, Signupable {
       // Test if location services are enabled.
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        // Location services are not enabled don't continue
-        // accessing the position and request users of the
-        // App to enable the location services.
         return Future.error('Location services are disabled.');
       }
 
@@ -120,11 +128,6 @@ class UserModel implements Loginable, Signupable {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          // Permissions are denied, next time you could try
-          // requesting permissions again (this is also where
-          // Android's shouldShowRequestPermissionRationale
-          // returned true. According to Android guidelines
-          // your App should show an explanatory UI now.
           return Future.error('Location permissions are denied');
         }
       }

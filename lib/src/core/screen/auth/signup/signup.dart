@@ -39,16 +39,21 @@ class _SignupState extends State<Signup> {
           );
         },
       );
-      setState(() {
-        isLoading = true;
-      });
+
       context.goNamed('dashboard');
     } else {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(// Menampilkan pesan kesalahan
-          SnackBar(content: Text(res)));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialogApp(
+            title: "Sign Up failed",
+            description: res,
+          );
+        },
+      );
     }
   }
 
@@ -154,15 +159,18 @@ class _SignupState extends State<Signup> {
               ),
             ),
             TextButton(
-                onPressed: () {
-                  context.goNamed('signin');
-                },
-                child: Text("Sign in",
-                    style: GoogleFonts.roboto(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: ColorApp.green,
-                    )))
+              onPressed: () {
+                context.goNamed('signin');
+              },
+              child: Text(
+                "Sign in",
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: ColorApp.green,
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -185,6 +193,7 @@ class AlertDialogApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: Text(
         title,
         style: GoogleFonts.roboto(

@@ -1,13 +1,13 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pollusafe_app/src/core/controller/UserController.dart';
+import 'package:pollusafe_app/src/core/model/AqiModel.dart';
+import 'package:pollusafe_app/src/core/model/AqiRankModel.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/detail_information.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/home_aqi_rank.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/indicator_container.dart';
-import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_data.dart';
-import 'package:pollusafe_app/src/core/screen/data/fetch/fetch_rank.dart';
 import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
 import 'package:pollusafe_app/src/shared/uid_provider.dart';
@@ -30,15 +30,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     // Initialize fetchRankData here
   }
 
-  // void scheduleRepeatingNotifications() {
-  //   Timer.periodic(Duration(minutes: 1), (Timer timer) {
-  //     LocalNotification.showScheduleNotification();
-  //   });
-  // }
-
   Future getData() async {
-    UserModel? data = await passData();
-    return data!.aqi;
+    UserModel? data = await UserController.passData();
+    return data!.defaultAqi;
   }
 
   @override
@@ -46,13 +40,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection('users');
 
-    // print(getData());
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
           child: FutureBuilder(
-              future: fetchData(),
+              // Widget yang berfungsi memperbarui nilai sebuah data yang didapatkan secara future
+              future: AirQualityIndex()
+                  .fetchDataAqi(), // Fetch data dari API untuk memperbarui nilai aqi
               builder: (context, snap) {
                 if (snap.hasData) {
                   return Container(
@@ -62,33 +58,38 @@ class _HomePageState extends ConsumerState<HomePage> {
                     child: Column(
                       children: [
                         StreamBuilder(
+                            // Mendengarkan perubahan data dari firebase untuk nilai aqi yang diupdate secara real-time
                             stream: users.doc(ref.read(uidUser)).snapshots(),
                             builder: (_, snapshot) {
                               if (snapshot.hasData) {
                                 return IndicatorContainer(
-                                    location: snap.data!.city,
-                                    time: snap.data!.time,
+                                    location: snap.data!.city!,
+                                    time: snap.data!.time!,
                                     aqi: snap.data!.aqi,
                                     temp: snap.data!.temp,
                                     settingAqiNew: snapshot.data!['aqi']);
                               } else {
                                 return IndicatorContainer(
-                                    location: snap.data!.city,
-                                    time: snap.data!.time,
+                                    location: snap.data!.city!,
+                                    time: snap.data!.time!,
                                     aqi: snap.data!.aqi,
                                     temp: snap.data!.temp,
                                     settingAqiNew: 100);
                               }
                             }),
+                        // Container biru itu Detailed Information
                         DetailedInformation(
                           humudity: snap.data!.humudity.toString(),
                           pm10: snap.data!.pm10.toString(),
                           wind: snap.data!.wind.toString(),
                           pressure: snap.data!.pressure.toString(),
                         ),
+                        // HeaderRankList : Untuk menampilkan judul daftar rank
                         const HeaderRankList(),
+                        // HomeAqiRank : Untuk menampilkan daftar rank di home
                         HomeAqiRank(
-                          fetchdata: fetchRankData() as Future<List?>,
+                          fetchdata: AirQualityIndex().fetchRankData()
+                              as Future<List?>,
                         )
                       ],
                     ),
@@ -112,7 +113,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                         const HeaderRankList(),
                         HomeAqiRank(
-                          fetchdata: fetchRankData() as Future<List?>,
+                          fetchdata:
+                              AqiRank().fetchDataAqiRank() as Future<List?>,
                         ),
                       ],
                     ),
