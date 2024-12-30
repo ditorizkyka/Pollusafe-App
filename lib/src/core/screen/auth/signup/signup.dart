@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pollusafe_app/services/auth_services.dart';
 import 'package:pollusafe_app/src/constant/constant.dart';
 import 'package:pollusafe_app/src/constant/themes/sizes.dart';
+import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/auth/signup/widgets/signup_field.dart';
 
 import 'package:pollusafe_app/src/widgets/button/button_app.dart';
@@ -24,7 +25,7 @@ class _SignupState extends State<Signup> {
 
   void createAccount() async {
     // Implementasi logika untuk membuat akun
-    String? res = await AuthServices().signUp(
+    String? res = await UserModel().authSignUp(
         email: emailController.text,
         password: passwordController.text,
         name: nicknameController.text);

@@ -31,10 +31,11 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
     double screenHeight = MediaQuery.of(context).size.height;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection('users');
-    final userControler = Get.put(UserController());
+    final userController = Get.put(UserController());
+    userController.userData();
 
     changeAqi(int aqiController) {
-      users.doc(userControler.userModel.value?.uid).update({
+      users.doc(userController.userModel.value?.uid).update({
         'aqi': aqiController,
       });
     }
@@ -54,7 +55,7 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
       ),
       body: SafeArea(
         child: StreamBuilder(
-            stream: users.doc(ref.read(uidUser)).snapshots(),
+            stream: users.doc(userController.userModel.value?.uid).snapshots(),
             builder: (_, snap) {
               if (snap.hasData) {
                 return Container(
@@ -220,7 +221,7 @@ class _SettingsAqiState extends ConsumerState<SettingsAqi> {
                                               500 &&
                                           int.parse(aqiController.text) >= 0) {
                                         UserModel().editAqiLevel(
-                                            ref.read(uidUser),
+                                            userController.userModel.value!.uid,
                                             int.parse(aqiController.text));
 
                                         showDialog(
