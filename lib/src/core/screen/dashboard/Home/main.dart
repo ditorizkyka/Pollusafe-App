@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:pollusafe_app/src/core/controller/UserController.dart';
 import 'package:pollusafe_app/src/core/model/AqiModel.dart';
 import 'package:pollusafe_app/src/core/model/AqiRankModel.dart';
@@ -9,8 +10,7 @@ import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/detail_infor
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/home_aqi_rank.dart';
 import 'package:pollusafe_app/src/core/screen/dashboard/Home/widget/indicator_container.dart';
 import 'package:pollusafe_app/src/core/model/UserModel.dart';
-import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
-import 'package:pollusafe_app/src/shared/uid_provider.dart';
+
 // import 'package:flutter/services.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -39,6 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection('users');
+    final userController = Get.put(UserController());
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -59,7 +60,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       children: [
                         StreamBuilder(
                             // Mendengarkan perubahan data dari firebase untuk nilai aqi yang diupdate secara real-time
-                            stream: users.doc(ref.read(uidUser)).snapshots(),
+                            stream: users
+                                .doc(userController.userModel.value?.uid)
+                                .snapshots(),
                             builder: (_, snapshot) {
                               if (snapshot.hasData) {
                                 return IndicatorContainer(

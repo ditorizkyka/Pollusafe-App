@@ -160,6 +160,7 @@ class AlertDialogAppSignOut extends StatelessWidget {
                 backgroundcolor: Colors.red,
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
+
                   context.goNamed('signin');
                 },
                 text: "Sign Out"),

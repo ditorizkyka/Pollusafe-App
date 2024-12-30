@@ -7,8 +7,6 @@ import 'package:pollusafe_app/src/constant/themes/sizes.dart';
 import 'package:pollusafe_app/src/core/controller/UserController.dart';
 import 'package:pollusafe_app/src/core/model/UserModel.dart';
 import 'package:pollusafe_app/src/core/screen/data/conditional/colorAqi.dart';
-import 'package:pollusafe_app/src/core/screen/data/passData/pass_data.dart';
-
 import 'package:pollusafe_app/src/shared/aqi_settings_provider.dart';
 import 'package:pollusafe_app/src/shared/data_aqi_provider.dart';
 import 'package:pollusafe_app/src/shared/uid_provider.dart';
@@ -56,6 +54,12 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
             stream: users.doc(ref.read(uidUser)).snapshots(),
             builder: (context, snap) {
               if (snap.hasData) {
+                //  SETTINGAN ASLI
+                // if (previousData != data.aqi && int.parse(data.aqi) >
+                //     ref.read(aqiSettingsProvider.notifier).state) {
+                //   UserModel().getNotification(
+                //       AqiIndicator.getStatus(int.parse(data.aqi)));
+                // }
                 if (int.parse(data.aqi) >
                     ref.read(aqiSettingsProvider.notifier).state) {
                   UserModel().getNotification(
@@ -201,7 +205,6 @@ class _IndicatorContainerState extends ConsumerState<IndicatorContainer> {
       loading: () => Container(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         width: double.infinity,
-        height: 289,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(30),
